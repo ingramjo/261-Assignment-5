@@ -1,7 +1,7 @@
 /*
  * CS 261 Assignment 5
- * Name: 
- * Date: 
+ * Name: Jonathan Ingram
+ * Date: 5/28/17
  */
 
 #include "task.h"
@@ -18,7 +18,11 @@
 Task* taskNew(int priority, char* name)
 {
     // FIXME: implement
-    return NULL;
+    Task *newTask = (Task *)malloc(sizeof(Task));
+    strcpy(newTask->name, name); //copies task names
+    newTask->priority = priority; //sets the priority
+
+    return newTask;
 }
 
 /**
@@ -37,11 +41,20 @@ void taskDelete(Task* task)
  *  0 if left's priority == right's priority.
  * @param left  Task pointer.
  * @param right  Task pointer.
- * @return 
+ * @return
  */
 int taskCompare(void* left, void* right)
 {
     // FIXME: implement
+    Task* leftTask = (Task *) left;
+    Task* rightTask = (Task *) right;
+
+    if(leftTask->priority < rightTask->priority){
+        return -1;
+    }
+    else if(leftTask->priority > rightTask->priority){
+        return 1;
+    }
     return 0;
 }
 

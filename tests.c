@@ -288,7 +288,7 @@ void addTests(CuSuite* suite)
     SUITE_ADD_TEST(suite, testDyHeapSort);
     SUITE_ADD_TEST(suite, testTaskNew);
     SUITE_ADD_TEST(suite, testTaskCompare);
-  //SUITE_ADD_TEST(suite, testDyOrderedAdd);
+    SUITE_ADD_TEST(suite, testDyOrderedAdd);
 }
 
 void runTests()
