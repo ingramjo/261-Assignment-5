@@ -346,7 +346,7 @@ void dyHeapSort(DynamicArray* heap, compareFunction compare)
     // FIXME: implement
     int idx;
     buildHeap(heap, compare);
-    for(idx = heap->siz - 1; idx >= 0; idx--){ //sorts the elements
+    for(idx = heap->size - 1; idx >= 0; idx--){ //sorts the elements
         dySwap(heap, 0, idx);
 
         adjustHeap(heap, idx, 0, compare);
