@@ -1,7 +1,7 @@
 /*
  * CS 261 Assignment 5
- * Name: 
- * Date: 
+ * Name: Jonathan Ingram
+ * Date: 5/28/17
  */
 
 #include "dynamicArray.h"
@@ -21,7 +21,7 @@ void listLoad(DynamicArray* heap, FILE* file)
     const int FORMAT_LENGTH = 256;
     char format[FORMAT_LENGTH];
     snprintf(format, FORMAT_LENGTH, "%%d, %%%d[^\n]", TASK_NAME_SIZE);
-    
+
     Task temp;
     while (fscanf(file, format, &temp.priority, &temp.name) == 2)
     {
@@ -71,6 +71,79 @@ void listPrint(DynamicArray* heap)
 void handleCommand(DynamicArray* list, char command)
 {
     // FIXME: Implement
+    char *fileName = (char*)malloc(sizeof(char) * 256);
+    char *tskDecript = (char*)malloc(sizeof(char) * 256);
+    int tskPriority;
+
+    //command loop
+    while(command){
+        case 'l':
+            printf("Enter file to load: ");
+            fgets(fileName, 100, stdin);
+            if(fileName[strlen(fileName) - 1] == '\n'){
+                fileName[strlen(fileName) - 1] = 0;
+            }
+            FILE *read = fopen(fileName, "r");
+            listLoad(list, read);
+            printf("Loaded from file. \n \n");
+            fclose(read);
+            break;
+        case 's':
+            printf("Enter file to store: ");
+            fgets(fileName, 100, stdin));
+            if(fileName[strlen(fileName) - 1] == 'n'){
+                fileName[strlen(fileName) - 1] = 0;
+            }
+            FILE *fileWRR = fopen(fileName, "w+");
+            listSave(list, fileWRR);
+            break;
+        case 'a':
+            printf("Task description: ");
+            fgets(tskDecript, 100, stdin);
+            if(tskDecript[strlen(tskDecript) - 1] == '\n'){
+                tskDecript[strlen(tskDecript) - 1] = 0;
+            }
+            printf("Assign task priority (0-999): ");
+            scanf("%d", &tskPriority);
+            while(getchar() != '\n');
+            Task *newTask = taskNew(tskPriority, tskDecript);
+            dyHeapAdd(list, newTask, taskCompare);
+            printf("Task added. \n\n");
+            break;
+        case 'g':
+            if(dySize(list) != 0){
+                printf("1st task: %s\n", ((struct Task*)dyHeapGetMin(list))->name);
+            }
+            else{
+                printf("Empty To Do List. \n\n");
+            }
+            break;
+        case 'r';
+            if(dySize(list) == 0){
+                printf("Empty To Do list.\n");
+            }
+            else{
+                struct Task* removeTask = (struct Task*)dyHeapGetMin(list);
+                printf("Removed task: %s\n", removeTask->name);
+                taskDelete(removeTask);
+            }
+            printf("\n\n");
+            break;
+        case 'p':
+            if(dySize(list) == 0){
+                printf("Empty To Do list.\n");
+            }
+            else{
+                listPrint(list);
+            }
+            break;
+        case 'e':
+            printf("Good Bye");
+            break;
+    }
+    free(tskDecript);
+    free(fileName);
+
 }
 
 int main()

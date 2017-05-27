@@ -1,7 +1,7 @@
 /*
  * CS 261 Assignment 5
- * Name: 
- * Date: 
+ * Name:  Jonathan Ingram
+ * Date: 5/28/17
  */
 
 #include "dynamicArray.h"
@@ -227,6 +227,34 @@ int dyOrderedContains(DynamicArray* bag, TYPE value, compareFunction compare)
 void adjustHeap(DynamicArray* heap, int last, int position, compareFunction compare)
 {
     // FIXME: implement
+    int myLeft = (2*position) + 1;  //this is to set the left child
+    int myRight = (2*position) + 2; //sets the right child
+
+    int myMin;  //declares the minimum
+
+    if(myLeft < last){
+        if(compare(dyGet(heap, myLeft), dyGet(heap, myRight)) == -1){
+            myMin = myLeft;
+        }
+        else{
+            myMin = myRight;
+        }
+
+        if(compare(dyGet(heap, myMin), dyGet(heap, position)) == -1){
+
+            dySwap(heap, position, myMin); //swaps nodes
+
+            adjustHeap(heap, last, myMin, compare); //adjust the heap again
+        }
+    }
+    else if(myLeft < last){
+        if(compare(dyGet(heap, myLeft), dyGet(heap, position)) == -1){
+
+            dySwap(heap, position, myLeft);
+
+            adjustHeap(heap, last, myLeft, compare);
+        }
+    }
 }
 
 /**
@@ -237,6 +265,13 @@ void adjustHeap(DynamicArray* heap, int last, int position, compareFunction comp
 void buildHeap(DynamicArray* heap, compareFunction compare)
 {
     // FIXME: implement
+    int heapSize = dySize(heap); //gets the heap size
+    int i;
+
+    for(i = (heapSize/ 2) - 1; i >= 0; i--){
+        //call the heap adjustment
+        adjustHeap(heap, heapSize, i, compare);
+    }
 }
 
 /**
@@ -248,6 +283,26 @@ void buildHeap(DynamicArray* heap, compareFunction compare)
 void dyHeapAdd(DynamicArray* heap, TYPE value, compareFunction compare)
 {
     // FIXME: implement
+    int i;
+    int parentNode;
+    void* parentVal;
+
+    assert(heap != 0); //checking to make sure heap is not empty
+
+    dyAdd(heap, value);
+
+    i = heap->size - 1; //getting index of value
+
+    parentNode = (i - 1) / 2;
+
+    parentVal = heap->data[parentNode];
+
+    while(i > 0 && compare(value, parentVal) == -1);{
+        dySwap(heap, i, parentNode);
+        i = parentVal;
+        parentNode = (i - 1) / 2;
+        parentVal = heap->data[parentNode];
+    }
 }
 
 /**
@@ -258,6 +313,13 @@ void dyHeapAdd(DynamicArray* heap, TYPE value, compareFunction compare)
 void dyHeapRemoveMin(DynamicArray* heap, compareFunction compare)
 {
     // FIXME: implement
+    void* lastVal;
+    assert(heap != 0);
+    assert(dySize(heap != 0));
+    lastVal = heap->data[dySize(heap) - 1];
+    heap->data[0] = lastVal;
+    heap->size--;
+    adjustHeap(heap, dySize(heap), 0, compare);
 }
 
 /**
@@ -268,7 +330,10 @@ void dyHeapRemoveMin(DynamicArray* heap, compareFunction compare)
 TYPE dyHeapGetMin(DynamicArray* heap)
 {
     // FIXME: implement
-    return NULL;
+    assert(heap != 0);
+    assert(dySize(heap) != 0);
+    return heap->data[0]; //this returns the top of the heap
+    return NULL; //if not it will return null
 }
 
 /**
@@ -279,6 +344,13 @@ TYPE dyHeapGetMin(DynamicArray* heap)
 void dyHeapSort(DynamicArray* heap, compareFunction compare)
 {
     // FIXME: implement
+    int idx;
+    buildHeap(heap, compare);
+    for(idx = heap->size - 1; idx >= 0; idx--){ //sorts the elements
+        dySwap(heap, 0, idx);
+
+        adjustHeap(heap, idx, 0, compare);
+    }
 }
 
 // --- Iterator ---
